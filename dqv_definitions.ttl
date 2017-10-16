@@ -1,0 +1,67 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dqv: <http://www.w3.org/ns/dqv#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix : <http://www.fake.com/> .
+
+#definition of dimensions and metrics
+:scopeAndDatatypesMetric 
+    a dqv:Metric ;
+    skos:definition "Fetch the scopes and datatypes present in the dataset from FAIRsharing.org."@en ;
+    dqv:expectedDataType xsd:string ;
+    dqv:inDimension :relevancy
+    .
+
+:terminologyArtifactsMetric
+	a dqv:Metric ;
+    skos:definition "Fetch the terminology artifacts used by the dataset from FAIRsharing.org."@en ;
+    dqv:expectedDataType xsd:string ;
+    dqv:inDimension :interoperability 
+	.
+
+:licensingMetric
+    a dqv:Metric ; 	
+    skos:definition "Machine and human readable indication of the license."@en ;
+    dqv:expectedDataType xsd:string ;
+    dqv:inDimension :availability
+    .
+
+:relevancy
+    a dqv:Dimension ;
+    skos:prefLabel "Relevancy"@en ;
+    skos:definition "Relevancy refers to the provision of information which is in accordance with the task at hand and important to the users’ query."@en ; 
+    dqv:inCategory :contextualDimensions
+    .
+
+:availability
+    a dqv:Dimension ;
+    skos:prefLabel "Availability"@en ;
+    skos:definition "Availability is the extent to which information (or some portion of it) is present, obtainable and ready for use."@en ;
+    dqv:inCategory :accessibility
+    .
+
+:interoperability 
+	a dqv:Dimension ;
+    skos:definition "Interoperability is the degree to which the format and structure of the information conforms to previously returned information as well as data from other sources."@en ;
+    skos:prefLabel "Interoperability"@en ;
+    dqv:inCategory :representationalDimensions 
+	.
+
+:accessibility
+    a dqv:Category ;
+    skos:definition "Accessibility dimensions involve aspects related to the access, authenticity and retrieval of data to obtain either the entire or some portion of the data for a particular use case."@en ;
+	skos:prefLabel "Accessibility dimensions"@en
+	.
+
+:contextualDimensions
+    a dqv:Category ;
+    skos:definition "Contextual dimensions are those that highly depend on the context of the task at hand."@en ;
+	skos:prefLabel "Contextual dimensions"@en
+	.
+
+:representationalDimensions
+    a dqv:Category ;
+    skos:definition "Representational dimensions capture aspects related to the design of the data."@en ;
+	skos:prefLabel "Representational dimensions"@en
+	.
