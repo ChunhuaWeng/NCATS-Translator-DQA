@@ -1,7 +1,9 @@
-"""Tests the fair_scraper function on the databases in the NCATS Data Quality
-# Google spreadsheet. Outputs the results in a tab-delimited CSV.
+"""Tests the fair_scraper and fair_quality_rdf functions on the databases in the NCATS Data Quality Google spreadsheet.
+Outputs an RDF file (turtle .ttl format) for each dataset tested with the filename based on the FAIRsharing.org URL.
 """
 
+import sys
+import os
 import fair_scraper
 import data_quality_rdf
 
@@ -37,10 +39,14 @@ import data_quality_rdf
 #         'https://fairsharing.org/biodbcore-000340']
 
 # Pages with a couple of tricky licenses for testing
-urls = ['https://fairsharing.org/biodbcore-000525']
+urls = ['https://fairsharing.org/biodbcore-000525',
+        'https://fairsharing.org/biodbcore-000155']
 
-# Output file name
-output_file = 'FAIR_RDF_test.ttl'
+# Write the results to an output folder where the code resides
+dir_code = sys.path[0]
+dir_output = os.path.join(dir_code, 'output')
+if not os.path.exists(dir_output):
+    os.mkdir(dir_output)
 
 # Process each url
 num_urls = len(urls)
@@ -49,6 +55,10 @@ for i in range(num_urls):
     url = urls[i]
     stats = fair_scraper.fair_scraper(url)
 
-    data_quality_rdf.data_quality_rdf(output_file, stats, 'http://www.fakedownload.com', 8315.7)
-    # fakeFPS = fair_scraper.FAIRPrelimStats('www.FAIRshearing.org/fakeurl', 'Fake Title', ['FS1', 'FS2', 'FS3'], ['FT1', 'FT2'], [('usage', ['condition1', 'condition2'])])
-    # data_quality_rdf.data_quality_rdf(output_file, fakeFPS, 'www.fakedownload.com', 8315.7)
+    # Output filename based on url
+    filename = url.split('/')[-1] + '_rdf.ttl'
+    output_file = os.path.join(dir_output, filename)
+
+    # Write out preliminary statistics using W3C DQV
+    data_quality_rdf.data_quality_rdf(output_file, stats)
+
