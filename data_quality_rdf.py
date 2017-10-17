@@ -1,3 +1,5 @@
+import sys
+import os
 from rdflib import Graph, Literal, URIRef, Namespace, RDF
 from rdflib.namespace import DC, DCTERMS, XSD
 from fair_scraper import FAIRPrelimStats
@@ -5,21 +7,25 @@ from fair_scraper import FAIRPrelimStats
 def data_quality_rdf(file, fps=FAIRPrelimStats(), downURL='', byteSize=-1):
     """Write out dataset data quality metrics in RDF using W3C data vocabulary.
 
-    :param title: Title of the dataset (String)
-    :param sad: Scopes and data types (List of Strings)
-    :param lic: Licenses (List of tuples (data usage (String), conditions (List of Strings)))
     :param file: Output file location (String)
+    :param fps: FAIRsharing preliminary stats (FAIRPrelimStats)
+    :param downURL: Download URL of dataset (String) [optional]
+    :param byteSize: Size of dataset in bytes [optional]
     :return: None
     """
 
     # Define namespaces
-    ns_local = Namespace("http://www.fake.com/")
+    ns_local = Namespace("http://ncats.nih.gov/")
     ns_dcat = Namespace("http://www.w3.org/ns/dcat#")
     ns_dqv = Namespace("http://www.w3.org/ns/dqv#")
 
-    # Read in the pre-defined turtle file
+    # Create a new graph
     g = Graph()
-    g.parse("dqv_definitions.ttl", format="ttl")
+
+    # Read in the pre-defined turtle file from the directory where the code resides
+    dir_code = sys.path[0]
+    file_predefined = os.path.join(dir_code, "dqv_definitions.ttl")
+    g.parse(file_predefined, format="ttl")
 
     # Use the dataset title as the local identifier
     if len(fps.url) > 0:

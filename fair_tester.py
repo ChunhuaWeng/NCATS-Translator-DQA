@@ -1,7 +1,9 @@
 """Tests the fair_scraper function on the databases in the NCATS Data Quality
-# Google spreadsheet. Outputs the results in a tab-delimited CSV.
+Google spreadsheet. Outputs the results in a tab-delimited CSV.
 """
 
+import sys
+import os
 import pandas as pd
 import fair_scraper
 
@@ -40,9 +42,6 @@ import fair_scraper
 urls = ['https://fairsharing.org/biodbcore-000525',
         'https://fairsharing.org/biodbcore-000155']
 
-# Output file name
-output_file = 'FAIRsharing_test.csv'
-
 # Separate items in a list with a semicolon
 sep_list = '; '
 
@@ -68,6 +67,13 @@ for i in range(num_urls):
                  sep_list.join(stats.scope_and_data_types),
                  sep_list.join(stats.terminology_artifacts),
                  lic_string]
+
+# Write the results to an output folder where the code resides
+dir_code = sys.path[0]
+dir_output = os.path.join(dir_code, 'output')
+if not os.path.exists(dir_output):
+    os.mkdir(dir_output)
+output_file = os.path.join(dir_output, 'FAIRsharing_test.csv')
 
 # Output the results as a CSV delimited with tabs
 df.to_csv(output_file, sep='\t')

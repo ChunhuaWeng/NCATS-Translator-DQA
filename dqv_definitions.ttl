@@ -3,12 +3,13 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dqv: <http://www.w3.org/ns/dqv#> .
 @prefix dcat: <http://www.w3.org/ns/dcat#> .
-@prefix : <http://www.fake.com/> .
+@prefix : <http://ncats.nih.gov/> .
 
 #definition of dimensions and metrics
 :scopeAndDatatypesMetric 
     a dqv:Metric ;
     skos:definition "Fetch the scopes and datatypes present in the dataset from FAIRsharing.org."@en ;
+	skos:prefLabel "Scopes and Data Types Metric"@en;
     dqv:expectedDataType xsd:string ;
     dqv:inDimension :relevancy
     .
@@ -16,6 +17,7 @@
 :terminologyArtifactsMetric
 	a dqv:Metric ;
     skos:definition "Fetch the terminology artifacts used by the dataset from FAIRsharing.org."@en ;
+	skos:prefLabel "Terminology Artifacts Metric"@en;
     dqv:expectedDataType xsd:string ;
     dqv:inDimension :interoperability 
 	.
@@ -23,6 +25,7 @@
 :licensingMetric
     a dqv:Metric ; 	
     skos:definition "Machine and human readable indication of the license."@en ;
+	skos:prefLabel "Licensing Metric"@en;
     dqv:expectedDataType xsd:string ;
     dqv:inDimension :availability
     .
