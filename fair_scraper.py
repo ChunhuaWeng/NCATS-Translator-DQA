@@ -3,6 +3,7 @@ Scrapes information from FAIRsharing.org
 """
 import requests
 from lxml import html
+import config
 
 
 def fair_scraper(url):
@@ -14,6 +15,10 @@ def fair_scraper(url):
     :param url: String url to page to scrape
     :return: FAIRPrelimStats object
     """
+    # output message
+    if config.verbose:
+        print('Scraping: ' + url)
+
     # load the page
     page = requests.get(url)
 

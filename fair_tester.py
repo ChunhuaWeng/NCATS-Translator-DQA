@@ -6,6 +6,7 @@ import sys
 import os
 import pandas as pd
 import fair_scraper
+import config
 
 # FAIRsharing.org URLs to test
 # urls = ['https://biosharing.org/biodbcore-000015',
@@ -51,8 +52,9 @@ df = pd.DataFrame(index=range(0, num_urls),
                   columns=['URL', 'title', 'scope and data types', 'terminology artifacts', 'license'])
 
 for i in range(num_urls):
-    # Scrape the page
     url = urls[i]
+
+    # Scrape the page
     stats = fair_scraper.fair_scraper(url)
 
     # Form a string describing the licenses
@@ -69,8 +71,7 @@ for i in range(num_urls):
                  lic_string]
 
 # Write the results to an output folder where the code resides
-dir_code = sys.path[0]
-dir_output = os.path.join(dir_code, 'output')
+dir_output = config.path_prelim_stats_output
 if not os.path.exists(dir_output):
     os.mkdir(dir_output)
 output_file = os.path.join(dir_output, 'FAIRsharing_test.csv')
@@ -78,3 +79,5 @@ output_file = os.path.join(dir_output, 'FAIRsharing_test.csv')
 # Output the results as a CSV delimited with tabs
 df.to_csv(output_file, sep='\t')
 
+if config.verbose:
+    print('Tabulated results: ' + output_file)
