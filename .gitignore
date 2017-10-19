@@ -42,3 +42,6 @@ Thumbs.db
 
 # Folder with output files from test scripts
 output/
+
+# Local config file
+config.py

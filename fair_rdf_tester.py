@@ -2,10 +2,10 @@
 Outputs an RDF file (turtle .ttl format) for each dataset tested with the filename based on the FAIRsharing.org URL.
 """
 
-import sys
 import os
 import fair_scraper
 import data_quality_rdf
+import config
 
 # FAIRsharing.org URLs to test
 # urls = ['https://biosharing.org/biodbcore-000015',
@@ -43,16 +43,13 @@ urls = ['https://fairsharing.org/biodbcore-000525',
         'https://fairsharing.org/biodbcore-000155']
 
 # Write the results to an output folder where the code resides
-dir_code = sys.path[0]
-dir_output = os.path.join(dir_code, 'output')
+dir_output = config.path_prelim_stats_output
 if not os.path.exists(dir_output):
     os.mkdir(dir_output)
 
 # Process each url
-num_urls = len(urls)
-for i in range(num_urls):
+for url in urls:
     # Scrape the page
-    url = urls[i]
     stats = fair_scraper.fair_scraper(url)
 
     # Output filename based on url

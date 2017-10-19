@@ -3,6 +3,8 @@ import os
 from rdflib import Graph, Literal, URIRef, Namespace, RDF
 from rdflib.namespace import DC, DCTERMS, XSD
 from fair_scraper import FAIRPrelimStats
+import config
+
 
 def data_quality_rdf(file, fps=FAIRPrelimStats(), downURL='', byteSize=-1):
     """Write out dataset data quality metrics in RDF using W3C data vocabulary.
@@ -13,6 +15,9 @@ def data_quality_rdf(file, fps=FAIRPrelimStats(), downURL='', byteSize=-1):
     :param byteSize: Size of dataset in bytes [optional]
     :return: None
     """
+    # Output message
+    if config.verbose:
+        print('Converting preliminary statistics to W3C DQV')
 
     # Define namespaces
     ns_local = Namespace("http://ncats.nih.gov/")
@@ -98,4 +103,8 @@ def data_quality_rdf(file, fps=FAIRPrelimStats(), downURL='', byteSize=-1):
 
     # Write out turtle file
     g.serialize(destination=file, format="ttl")
+
+    # Output message
+    if config.verbose:
+        print('Preliminary statistics in W3C DQV written to: ' + file)
 
