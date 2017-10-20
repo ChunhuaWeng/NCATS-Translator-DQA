@@ -35,7 +35,9 @@ class RDFUnitWrapper:
         # Check the return code for errors
         if cp.returncode != 0:
             sys.stderr.write('There was an error running rdfunit\n')
+            sys.stderr.write(str(cp.args))
             sys.stderr.write(cp.stderr)
+            sys.stderr.write(cp.stdout)
             raise Exception('rdfunit error')
 
         # Build the expected filename of the output file written by rdfunit
@@ -78,6 +80,8 @@ class RDFUnitWrapper:
         # Check the return code for errors
         if cp.returncode != 0:
             sys.stderr.write('There was an error running dqv-report\n')
+            sys.stderr.write(str(cp.args) + '\n')
+            sys.stderr.write(cp.stderr)
             sys.stderr.write(cp.stderr)
             raise Exception('dqv-report error')
 
