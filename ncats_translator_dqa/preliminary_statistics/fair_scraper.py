@@ -1,9 +1,11 @@
 """
 Scrapes information from FAIRsharing.org
 """
+import os
 import requests
 from lxml import html
-import config
+import pandas as pd
+from ncats_translator_dqa import config
 
 
 def fair_scraper(url):
@@ -105,6 +107,39 @@ def fair_scraper(url):
     return FAIRPrelimStats(url, title, sad, ta, lic_info)
 
 
+def fair_table(fpss, file_output):
+    """Writes a list of preliminary statistics from multiple FAIRsharing.org urls to a CSV file
+
+    :param fpss: List of FAIRPrelimStats
+    :param file_output: Path to output file to write to (String)
+    :return:
+    """
+    # Store results in data frame
+    num_fpss = len(fpss)
+    df = pd.DataFrame(index=range(0, num_fpss),
+                      columns=['URL', 'title', 'scope and data types', 'terminology artifacts', 'license'])
+
+    # Add each FPS result to the data frame
+    for i in range(num_fpss):
+        fps = fpss[i]
+        df.loc[i] = [fps.url,
+                     fps.title,
+                     fps.get_scope_and_data_types_string(),
+                     fps.get_terminology_artifacts_string(),
+                     fps.get_license_string()]
+
+    # Make sure the output directory exists
+    directory = os.path.split(file_output)[0]
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+
+    # Write the results
+    df.to_csv(file_output, sep='\t')
+
+    if config.verbose:
+        print('Tabulated results: ' + file_output)
+
+
 class FAIRPrelimStats:
     """
     Class that contains scraped information from FAIRsharing.org
@@ -129,3 +164,27 @@ class FAIRPrelimStats:
         self.scope_and_data_types = sad
         self.terminology_artifacts = ta
         self.license = lic
+
+    def get_scope_and_data_types_string(self, sep='; '):
+        """Gets a string representing the scopes and data types
+
+        :param sep: Separator to be used between each scope and data type (String) [default=', ']
+        :return: String representing the scopes and data types
+        """
+        return sep.join(self.scope_and_data_types)
+
+    def get_terminology_artifacts_string(self, sep='; '):
+        """Gets a string representing the terminology artifacts
+
+        :param sep: Separator to be used between each scope and data type (String) [default=', ']
+        :return: String representing the terminology artifacts
+        """
+        return sep.join(self.terminology_artifacts)
+
+    def get_license_string(self):
+        lic_strings = []
+        sep = '; '
+        for lic in self.license:
+            lic_strings.append(lic[0] + " = {" + sep.join(lic[1]) + "}")
+        lic_string = sep.join(lic_strings)
+        return lic_string

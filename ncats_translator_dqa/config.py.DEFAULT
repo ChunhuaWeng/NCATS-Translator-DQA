@@ -1,0 +1,26 @@
+'''Configuration file for NCATS Translator DQA
+'''
+
+from os.path import split, join
+
+# Get the path where the ncats_translator_dqa package resides
+__local_path = split(__file__)[0]
+
+# Absolute path to output folder for preliminary statistics
+# default: 'Output' folder at the same level as NCATS-Translator-DQA repository
+path_output = join(__local_path, '..', '..', 'Output')
+
+# Absolute path to the rdfunit main folder
+# default: 'RDFUnit' folder at the same level as NCATS-Translator-DQA repository
+path_rdfunit = join(__local_path, '..', '..', 'RDFUnit')
+
+# Path to resources folder
+# default: resource folder under ncats_translator_dqa package
+resource_path = join(__local_path, 'resources')
+
+# URL for GraphDB
+# default: 'http://localhost:7200/'
+url_graphdb = 'http://localhost:7200/'
+
+# Display output messages
+verbose = True

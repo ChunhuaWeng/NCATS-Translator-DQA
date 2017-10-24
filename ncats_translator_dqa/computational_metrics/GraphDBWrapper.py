@@ -59,6 +59,9 @@ class GraphDBWrapper:
         if self.verbose:
             print('GraphDB: creating repository ' + repo_id)
 
+        # Make sure the repo ID is safe
+        repo_id = GraphDBWrapper.sanitize_repo_id(repo_id)
+
         # Repository configuration
         repo_config = {
             'id': repo_id,
@@ -120,3 +123,12 @@ class GraphDBWrapper:
         :return: None
         """
         print('GraphDB response status ' + response.status_code + ': ' + response.content.decode())
+
+    @staticmethod
+    def sanitize_repo_id(suggested_id):
+        """Sanitizes the suggested repository name so that it meets the requirements for a GraphDB repository name
+
+        :param suggested_name: The suggested name (String)
+        :return: The sanitized name (String)
+        """
+        return ''.join([c if c.isalnum() else '_' for c in suggested_id])

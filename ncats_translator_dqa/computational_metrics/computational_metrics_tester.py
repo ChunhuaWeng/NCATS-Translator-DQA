@@ -3,7 +3,7 @@
 Please update config.py prior to using this function.
 '''
 
-from computational_metrics import computational_metrics
+from ncats_translator_dqa.computational_metrics.computational_metrics import computational_metrics
 
 # Absolute paths to datasets
 dataset_files = [
