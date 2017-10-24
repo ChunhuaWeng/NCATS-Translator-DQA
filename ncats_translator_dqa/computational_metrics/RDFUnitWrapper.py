@@ -3,12 +3,13 @@
 import os
 import sys
 import subprocess
+from ncats_translator_dqa import config
 
 
 class RDFUnitWrapper:
     __rdfunit_output_extension = '.shaclFullTestCaseResult.ttl'
 
-    def __init__(self, path_rdfunit, verbose=False):
+    def __init__(self, path_rdfunit=config.path_rdfunit, verbose=config.verbose):
         """Constructor
 
         :param path_rdfunit: Absolute path to the RDFUnit base directory (one folder above bin)
@@ -58,8 +59,24 @@ class RDFUnitWrapper:
                 sys.stderr.write('Could not find the output RDF file from rdfunit\n')
                 raise FileNotFoundError(file_rdf_output)
 
+        # Move the output files from the <RDFUnit>/data/results to the configured output directory
+        filename_dataset = os.path.split(file_dataset)[1]
+        filename_dataset = os.path.splitext(filename_dataset)[0]
+        file_rdfunit_new = os.path.join(config.path_output, filename_dataset + '_computational_metrics.ttl')
+        os.rename(file_rdf_output, file_rdfunit_new)
+
+        # Move the html file also
+        filename_rdf_output = os.path.split(file_rdf_output)[1]
+        filename_rdf_output = os.path.splitext(filename_rdf_output)[0]
+        file_html_old = os.path.join(config.path_rdfunit, 'data', 'results', filename_rdf_output + '.html')
+        file_html_new = os.path.join(config.path_output, filename_dataset + '_computational_metrics.html')
+        os.rename(file_html_old, file_html_new)
+
+        if self.verbose:
+            print('rdfunit finished. output file: ' + file_rdfunit_new)
+
         # Return the path to the rdfunit output file
-        return file_rdf_output
+        return file_rdfunit_new
 
     def dqv_report(self, file_rdf_output):
         """Calls dqv-report on the given file
@@ -72,9 +89,10 @@ class RDFUnitWrapper:
 
         # Generate an output filename for the dqv report
         filename_dqv_report = os.path.split(file_rdf_output)[1] + '.dqv_report.ttl'
+        file_dqv_report_rel = os.path.join('data/results', filename_dqv_report)
 
         # Run dqv-report
-        cp = subprocess.run([self.__bin_dqvreport, '-i', file_rdf_output, '-o', filename_dqv_report],
+        cp = subprocess.run([self.__bin_dqvreport, '-i', file_rdf_output, '-o', file_dqv_report_rel],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='UTF-8', cwd=self.path_rdfunit)
 
         # Check the return code for errors
@@ -82,14 +100,21 @@ class RDFUnitWrapper:
             sys.stderr.write('There was an error running dqv-report\n')
             sys.stderr.write(str(cp.args) + '\n')
             sys.stderr.write(cp.stderr)
-            sys.stderr.write(cp.stderr)
+            sys.stderr.write(cp.stdout)
             raise Exception('dqv-report error')
 
         # Check that the dqv report file was created
-        file_dqv_report = os.path.join(self.path_rdfunit, 'data', 'results', filename_dqv_report)
+        file_dqv_report = os.path.join(self.path_rdfunit, file_dqv_report_rel)
         if not os.path.exists(file_dqv_report):
             sys.stderr.write('Could not find the dqv-report generated file: ' + file_dqv_report + '\n')
             raise FileNotFoundError(file_dqv_report)
 
+        # Move the output file from the <RDFUnit>/data/results to the configured output directory
+        file_dqv_new = os.path.join(config.path_output, filename_dqv_report)
+        os.rename(file_dqv_report, file_dqv_new)
+
+        if self.verbose:
+            print('dqv-report finished. output file: ' + file_dqv_new)
+
         # Return the path to the dqv report file
-        return file_dqv_report
+        return file_dqv_new
