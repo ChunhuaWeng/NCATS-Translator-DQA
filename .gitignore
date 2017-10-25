@@ -40,7 +40,7 @@ Thumbs.db
 # Pycharm files
 .idea/
 
-# Folder with output files from test scripts
+# Folder with output files
 output/
 
 # Local config file
