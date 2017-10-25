@@ -82,9 +82,9 @@ cd NCATS-Translator-DQA/ncats_translator_dqa/
 cp config.py.DEFAULT config.py
 ```
 
-Add the NCATS-Translator-DQA folder to PYTHONPATH  
+Add the NCATS-Translator-DQA folder to PYTHONPATH.  
 ```
-export PYTHONPATH=$PYTHONPATH:/home/user/NCATS-Translator-DQA
+export PYTHONPATH=$PYTHONPATH:/path/to/the/folder/NCATS-Translator-DQA
 ```
 Note: this must either be performed each time a terminal is opened or you can add this line to your shell's initiation script, e.g., ~/.bashrc
 
@@ -139,6 +139,23 @@ sudo python3.6 get-pip.py
 ```
 
 Use ```python3.6``` to invoke python and ```pip3.6``` to install required packages
+
+### ModuleNotFoundError: No module named 'ncats_translator_dqa'
+
+Add the NCATS-Translator-DQA folder to the PYTHONPATH environment variable. For example, if the NCATS-Translator-DQA folder exists at /home/username/NCATS-Translator-DQA:
+
+```
+export PYTHONPATH=$PYTHONPATH:/home/username/NCATS-Translator-DQA
+```
+
+You can also verify that the PYTHONPATH environment variable is set correctly:
+
+```
+echo $PYTHONPATH
+python3
+>>> import sys
+>>> sys.path
+```
 
 ### ImportError: cannot import name 'etree'
 
