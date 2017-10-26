@@ -7,7 +7,7 @@ from ncats_translator_dqa.computational_metrics.GraphDBWrapper import GraphDBWra
 from ncats_translator_dqa.computational_metrics.RDFUnitWrapper import RDFUnitWrapper
 
 
-def computational_metrics(file_dataset):
+def computational_metrics(file_dataset, schema=''):
     """Computes computational metrics for linked open datasets.
 
     Runs RDFUnit on datasets and generates reports in W3C Data Quality Vocabulary (DQV). Creates a new GraphDB
@@ -19,13 +19,15 @@ def computational_metrics(file_dataset):
     time to finish importing and generating diagrams depending on the size of the data.
 
     :param file_dataset: Absolute path to dataset
+    :param schema: URI to schema to perform validation against or defined schema prefix. Leave empty for automatic
+     detection of ontologies by rdfunit (String) [optional]
     :return: None
     """
     # RDFUnitWrapper object for running rdfunit and dqv-report
     rdfunit = RDFUnitWrapper()
 
     # Run rdfunit on data
-    file_rdfunit_output = rdfunit.rdfunit(file_dataset)
+    file_rdfunit_output = rdfunit.rdfunit(file_dataset, schema)
 
     # GraphDB object for interacting with GraphDB REST API
     graphdb = GraphDBWrapper(config.url_graphdb, config.verbose)

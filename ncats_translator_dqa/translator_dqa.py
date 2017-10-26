@@ -7,7 +7,7 @@ from ncats_translator_dqa.preliminary_statistics import fair_scraper, prelim_sta
 from ncats_translator_dqa.computational_metrics.computational_metrics import computational_metrics
 
 
-def translator_dqa(fair_url=None, file_data=None, file_multi=None):
+def translator_dqa(fair_url=None, file_data=None, file_multi=None, schema=None):
     """Implementation of the command line interface for NCATS Translator Data Quality Analysis Pipeline
 
     :param fair_url: FAIRsharing.org url
@@ -18,6 +18,9 @@ def translator_dqa(fair_url=None, file_data=None, file_multi=None):
     dir_output = config.path_output
     if not os.path.exists(dir_output):
         os.mkdir(dir_output)
+
+    if schema is None:
+        schema = ''
 
     # CSV file option
     if file_multi is not None:
@@ -42,7 +45,7 @@ def translator_dqa(fair_url=None, file_data=None, file_multi=None):
                     if file_data is not None:
                         file_data = file_data.strip()
                         if os.path.exists(file_data):
-                            computational_metrics(file_data)
+                            computational_metrics(file_data, schema)
 
         # Write all preliminary statistics to a single csv
         filename = 'prelim_stats_' + datetime.now().isoformat(timespec='seconds') + '.csv'
@@ -58,7 +61,7 @@ def translator_dqa(fair_url=None, file_data=None, file_multi=None):
 
     # Data file option
     if file_data is not None:
-        computational_metrics(file_data)
+        computational_metrics(file_data, schema)
 
 
 def __prelim_stats(url, dir_output, write_csv=False):
@@ -103,12 +106,13 @@ def main():
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-f', dest='fair_url', help='FAIRsharing.org URL for preliminary statistics')
     parser.add_argument('-d', dest='file_data', help='Absolute path to data file for computational metrics')
+    parser.add_argument('-s', dest='schema', help='Specify schema for computational metrics')
     parser.add_argument('-m', dest='file_multi', help=('CSV file defining multiple data sets to test. Define one data '
                                                        'set on each line with format [FAIRsharing.org URL], [data set '
                                                        'file] (without brackets). Each argument is optional. If this '
                                                        'argument is used, -f and -d arguments are ignored.'))
     args = parser.parse_args()
-    translator_dqa(args.fair_url, args.file_data, args.file_multi)
+    translator_dqa(args.fair_url, args.file_data, args.file_multi, args.schema)
 
 
 if __name__ == '__main__':
