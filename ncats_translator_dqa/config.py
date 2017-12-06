@@ -10,7 +10,7 @@ __local_path = split(__file__)[0]
 # Absolute path to the main RDFUnit folder
 # default: 'RDFUnit' folder at the same level as 'NCATS-Translator-DQA' repository
 #path_rdfunit = join(__local_path, '..', '..', 'RDFUnit')
-path_rdfunit = '/root/NCATS-Translator-DQA/RDFUnit/'
+path_rdfunit = '/root/RDFUnit/'
 
 # URL for GraphDB
 # default: 'http://localhost:7200/'
