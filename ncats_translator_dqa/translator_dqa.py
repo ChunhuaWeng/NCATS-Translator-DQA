@@ -51,6 +51,7 @@ def translator_dqa(fair_url=None, file_data=None, file_multi=None, schema=None):
 
         # Write all preliminary statistics to a single csv
         filename = 'prelim_stats_' + datetime.now().isoformat(timespec='seconds') + '.csv'
+        filename = 'prelim_stats.csv'
         output_csv_file = os.path.join(dir_output, filename)
         fair_scraper.fair_table(prelim_stats_list, output_csv_file)
 

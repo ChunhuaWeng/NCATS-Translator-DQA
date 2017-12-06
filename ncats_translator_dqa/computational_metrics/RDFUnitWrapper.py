@@ -3,6 +3,7 @@
 import os
 import sys
 import subprocess
+import shutil
 from ncats_translator_dqa import config
 
 
@@ -70,14 +71,16 @@ class RDFUnitWrapper:
         filename_dataset = os.path.split(file_dataset)[1]
         filename_dataset = os.path.splitext(filename_dataset)[0]
         file_rdfunit_new = os.path.join(config.path_output, filename_dataset + '_computational_metrics.ttl')
-        os.rename(file_rdf_output, file_rdfunit_new)
+        shutil.move(file_rdf_output, file_rdfunit_new)
+        #os.rename(file_rdf_output, file_rdfunit_new)
 
         # Move the html file also
         filename_rdf_output = os.path.split(file_rdf_output)[1]
         filename_rdf_output = os.path.splitext(filename_rdf_output)[0]
         file_html_old = os.path.join(config.path_rdfunit, 'data', 'results', filename_rdf_output + '.html')
         file_html_new = os.path.join(config.path_output, filename_dataset + '_computational_metrics.html')
-        os.rename(file_html_old, file_html_new)
+        shutil.move(file_html_old, file_html_new)
+        #os.rename(file_html_old, file_html_new)
 
         if self.verbose:
             print('rdfunit finished. output file: ' + file_rdfunit_new)
