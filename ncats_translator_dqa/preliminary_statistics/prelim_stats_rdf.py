@@ -5,7 +5,7 @@ from rdflib.namespace import DCTERMS, XSD
 from ncats_translator_dqa import config
 
 
-class  :
+class PrelimStatsRDF:
     def __init__(self, dataset_id, fps=None, down_url='', byte_size=-1):
         """Write out dataset data quality metrics in RDF using W3C data vocabulary.
 
