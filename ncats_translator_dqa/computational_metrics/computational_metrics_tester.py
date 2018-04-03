@@ -7,9 +7,9 @@ from ncats_translator_dqa.computational_metrics.computational_metrics import com
 
 # Absolute paths to datasets
 dataset_files = [
-    '/media/casey/Data/Research/NCATS-DQ/Data/chembl_18.0_cellline.ttl',
-    '/media/casey/Data/Research/NCATS-DQ/Data/kegg-drug.ttl',
-    '/media/casey/Data/Research/NCATS-DQ/Data/sider_effects.ttl'
+    '/root/NCATS-Translator-DQA/Input/chembl_18.0_cellline.ttl',
+    '/root/NCATS-Translator-DQA/Input/kegg-drug.ttl',
+    '/root/NCATS-Translator-DQA/Input/animalqtldb.ttl'
 ]
 
 # Run computational metrics on each dataset

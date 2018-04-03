@@ -9,13 +9,11 @@ from ncats_translator_dqa.preliminary_statistics import fair_scraper, prelim_sta
 from ncats_translator_dqa.computational_metrics.computational_metrics import computational_metrics
 
 
-def translator_dqa(fair_url=None, dataset=None, sparql_endpoint=None, sparql_graph=None, file_multi=None, schema=None):
+def translator_dqa(fair_url=None, file_data=None, file_multi=None, schema=None):
     """Implementation of the command line interface for NCATS Translator Data Quality Analysis Pipeline
 
     :param fair_url: FAIRsharing.org url
-    :param dataset: Dataset URI
-    :param sparql_endpoint: SPARQL endpoint
-    :param sparql_graph: SPARQL graph
+    :param file_data: Absolute path to data file for computational metrics
     :param file_multi: Path to CSV file listing FAIRsharing.org url and data set path for each data set to test
     :return:
     """
@@ -35,7 +33,7 @@ def translator_dqa(fair_url=None, dataset=None, sparql_endpoint=None, sparql_gra
         with open(file_multi) as csvfile:
             csv_reader = csv.reader(csvfile, delimiter=',')
             for row in csv_reader:
-                if len(row) >= 2:
+                if len(row) == 2:
                     # Preliminary statistics
                     url = row[0]
                     if url is not None:
@@ -45,19 +43,11 @@ def translator_dqa(fair_url=None, dataset=None, sparql_endpoint=None, sparql_gra
                             prelim_stats_list.append(stats)
 
                     # Computational metrics
-                    dataset = row[1]
-                    if dataset is not None:
-                        dataset = dataset.strip()
-                        endpoint = sparql_endpoint  # use endpoint specified on command line as default
-                        graph = sparql_graph  # use graph specified on command line as default
-
-                        if len(row) >= 3 and row[2] is not None and len(row[2]) > 0:
-                            endpoint = row[2]
-
-                        if len(row) >= 4 and row[3] is not None and len(row[3]) > 0:
-                            graph = row[3]
-
-                        computational_metrics(dataset, endpoint, graph, schema)
+                    file_data = row[1]
+                    if file_data is not None:
+                        file_data = file_data.strip()
+                        if os.path.exists(file_data):
+                            computational_metrics(file_data, schema)
 
         # Write all preliminary statistics to a single csv
         filename = 'prelim_stats_' + datetime.now().isoformat(timespec='seconds') + '.csv'
@@ -73,8 +63,8 @@ def translator_dqa(fair_url=None, dataset=None, sparql_endpoint=None, sparql_gra
         __prelim_stats(fair_url, dir_output, True)
 
     # Data file option
-    if dataset is not None:
-        computational_metrics(dataset, sparql_endpoint, sparql_graph, schema)
+    if file_data is not None:
+        computational_metrics(file_data, schema)
 
 
 def __prelim_stats(url, dir_output, write_csv=False):
@@ -111,28 +101,21 @@ def main():
                                              'Single data set, preliminary statistics only:\n'
                                              'python3 translator_dqa.py -f https://fairsharing.org/biodbcore-000340\n\n'                                     
                                              'Single data set, computational metrics only:\n'
-                                             'python3 translator_dqa.py -d /home/user/data/data.ttl\n\n'
-                                             'SPARQL endpoint, computational metrics only:\n'
-                                             'python3 translator_dqa.py -d http://dbpedia.org -e http://dbpedia.org/sparql\n\n'
+                                             'python3 translator_dqa.py -d /home/user/data/data.ttl\n\n'                                     
                                              'Single data set, preliminary and computational metrics:\n'
                                              'python3 translator_dqa.py -f https://fairsharing.org/biodbcore-000340 -d /home/user/data/data.ttl\n\n'                                     
                                              'Multiple data sets defined in a CSV file\n'
                                              'python3 translator_dqa.py -m /home/user/data/multiple_data_sets.csv'),
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('-f', dest='fair_url', help='FAIRsharing.org URL for preliminary statistics')
-    parser.add_argument('-d', dest='dataset', help=('Dataset URI to perform computational metrics on. Can be a local '
-                                                    'file, remote, or SPARQL endpoint. For local files, specify the '
-                                                    'absolute path.'))
-    parser.add_argument('-e', dest='sparql_endpoint', help='SPARQL endpoint for the dataset')
-    parser.add_argument('-g', dest='sparql_graph', help=('Optional additional parameter to specify which graph on the ' 
-                                                         'SPARQL endpoint to run against'))
+    parser.add_argument('-d', dest='file_data', help='Absolute path to data file for computational metrics')
     parser.add_argument('-s', dest='schema', help='Specify schema for computational metrics')
     parser.add_argument('-m', dest='file_multi', help=('CSV file defining multiple data sets to test. Define one data '
                                                        'set on each line with format [FAIRsharing.org URL], [data set '
                                                        'file] (without brackets). Each argument is optional. If this '
                                                        'argument is used, -f and -d arguments are ignored.'))
     args = parser.parse_args()
-    translator_dqa(args.fair_url, args.dataset, args.sparql_endpoint, args.sparql_graph, args.file_multi, args.schema)
+    translator_dqa(args.fair_url, args.file_data, args.file_multi, args.schema)
 
 
 if __name__ == '__main__':
